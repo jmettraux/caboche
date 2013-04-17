@@ -7,18 +7,23 @@
   <body>
     <h1>hello</h1>
     <script>
+      function log(text) {
+        var e = document.createElement('p');
+        e.appendChild(document.createTextNode(text));
+        document.body.appendChild(e);
+      };
       Caboche.require('a.js')
       Caboche.require('b.js')
       Caboche.ready(function() {
         try {
           A
-          document.write('A is here<br/>')
-        } catch(ex) { document.write('A is not here<br/>'); }
+          log('A is here')
+        } catch(ex) { log('A is not here'); }
         try {
           B
-          document.write('B is here<br/>')
-        } catch(ex) { document.write('B is not here<br/>'); }
-        document.write('over.')
+          log('B is here')
+        } catch(ex) { log('B is not here'); }
+        log('over.')
       });
     </script>
   </body>
