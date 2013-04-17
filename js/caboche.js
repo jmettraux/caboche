@@ -26,18 +26,32 @@ var Caboche = (function() {
 
   var VERSION = '1.0.0';
 
-  var self = this;
+  //var self = this;
+
+  //
+  // helpers
+
+  function createScriptElt(src) {
+
+    var e = document.createElement('script');
+    e.src = src;
+    document.getElementsByTagName('head')[0].appendChild(e);
+    return e;
+  }
 
   //
   // require
 
   this.require = function() {
+
+    for (var i in arguments) { createScriptElt(arguments[i]); }
   };
 
   //
   // ready
 
   this.ready = function(callback) {
+
     callback();
   };
 
