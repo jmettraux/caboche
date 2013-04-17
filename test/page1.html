@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>page1.html</title>
+    <script src="../js/caboche.js"></script>
+  <head>
+  <body>
+    <h1>hello</h1>
+    <p>loading a and b.js in "parallel"</p>
+    <script>
+      function log(text) {
+        var e = document.createElement('p');
+        e.appendChild(document.createTextNode(text));
+        document.body.appendChild(e);
+      };
+      Caboche.require('a.js')
+      Caboche.require('b.js')
+      Caboche.ready(function() {
+        try {
+          A
+          log('A is here')
+        } catch(ex) { log('A is not here'); }
+        try {
+          B
+          log('B is here')
+        } catch(ex) { log('B is not here'); }
+        log('over.')
+      });
+    </script>
+  </body>
+</html>
+

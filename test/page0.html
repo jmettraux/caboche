@@ -2,29 +2,27 @@
 <html>
   <head>
     <title>page0.html</title>
-    <script src="../js/caboche.js"></script>
+    <script src="a.js"></script>
+    <script src="b.js"></script>
   <head>
   <body>
     <h1>hello</h1>
+    <p>all the scripts in the head, statically</p>
     <script>
       function log(text) {
         var e = document.createElement('p');
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
-      Caboche.require('a.js')
-      Caboche.require('b.js')
-      Caboche.ready(function() {
-        try {
-          A
-          log('A is here')
-        } catch(ex) { log('A is not here'); }
-        try {
-          B
-          log('B is here')
-        } catch(ex) { log('B is not here'); }
-        log('over.')
-      });
+      try {
+        A
+        log('A is here')
+      } catch(ex) { log('A is not here'); }
+      try {
+        B
+        log('B is here')
+      } catch(ex) { log('B is not here'); }
+      log('over.')
     </script>
   </body>
 </html>
