@@ -28,31 +28,58 @@ var Caboche = (function() {
 
   //var self = this;
 
-  //
-  // helpers
+  var loadCount = 0;
+  var callbacks = [];
 
-  function createScriptElt(src) {
+  function loadNext(prev, chain) {
 
-    var e = document.createElement('script');
-    e.src = src;
-    document.getElementsByTagName('head')[0].appendChild(e);
-    return e;
+    if (prev) loadCount = loadCount - 1;
+    var next = chain.shift();
+
+    if ( ! next) { // end of sequence
+      if (loadCount < 1) for (var i in callbacks) { callbacks[i]() }
+    }
+    else if ((typeof next) === 'string') {
+      var e = document.createElement('script');
+      e.src = next;
+      e.type = 'text/javascript';
+      e.className = 'caboche';
+      e.onload = e.onerror = function() { loadNext(next, chain) };
+      document.getElementsByTagName('head')[0].appendChild(e);
+    }
+    else { // function (sequence callback)
+      next();
+      loadNext(null, chain);
+    }
   }
 
+  // Accepts a list of strings (js script URIs) or functions (callbacks).
+  // Loads each script sequentially, fires callback as it encounters them.
+  // May be called multiple times.
   //
-  // require
-
   this.require = function() {
 
-    for (var i in arguments) { createScriptElt(arguments[i]); }
+    var a = [];
+
+    for (var i in arguments) {
+      var arg = arguments[i];
+      if ((typeof arg) === 'string') loadCount = loadCount + 1;
+      a.push(arguments[i]);
+    }
+
+    loadNext(null, a);
   };
 
   //
   // ready
 
+  // Registers a callback to run once all the scripts have loaded and
+  // executed.
+  // May be called multiple times.
+  //
   this.ready = function(callback) {
 
-    callback();
+    callbacks.push(callback);
   };
 
   //
