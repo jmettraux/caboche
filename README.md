@@ -10,6 +10,8 @@ Do not want to wait on [this](https://github.com/headjs/headjs/issues/203) or [t
 
 ## usage
 
+For now, there is only one use case: "require a bunch of file, let them load in parallel (hopefully) and run stuff when they are all loaded (and executed)".
+
 ```html
 <html>
 
@@ -25,7 +27,8 @@ Do not want to wait on [this](https://github.com/headjs/headjs/issues/203) or [t
     <script>
 
       Caboche.require('/js/jquery.js')
-      Caboche.require('/js/a.js', '/js/b.js')
+      Caboche.require('/js/a.js')
+      Caboche.require('/js/b.js')
       //...
 
       Caboche.ready(function() {
