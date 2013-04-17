@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>page0.html</title>
+    <script src="../js/caboche.js"></script>
+  <head>
+  <body>
+    <h1>hello</h1>
+    <script>
+      Caboche.require('a.js')
+      Caboche.require('b.js')
+      Caboche.ready(function() {
+        try {
+          A
+          document.write('A is here<br/>')
+        } catch(ex) { document.write('A is not here<br/>'); }
+        try {
+          B
+          document.write('B is here<br/>')
+        } catch(ex) { document.write('B is not here<br/>'); }
+        document.write('over.')
+      });
+    </script>
+  </body>
+</html>
+

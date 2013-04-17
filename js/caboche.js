@@ -29,6 +29,19 @@ var Caboche = (function() {
   var self = this;
 
   //
+  // require
+
+  this.require = function() {
+  };
+
+  //
+  // ready
+
+  this.ready = function(callback) {
+    callback();
+  };
+
+  //
   // over.
 
   return this;
