@@ -5,9 +5,7 @@ Almost empty headed.
 
 Inspired by [head.js](http://headjs.com/) and [lazyload](https://github.com/rgrove/lazyload/).
 
-Do not want to wait on [this](https://github.co/headjs/headjs/issues/203) or [that](https://github.co/rgrove/lazyload/pull/10).
-
-Notification test: [this](https://github.com/jmettraux/ruote-fluo/issues/5).
+Do not want to wait on [this](https://github.com/headjs/headjs/issues/203) or [that](https://github.com/rgrove/lazyload/pull/10).
 
 
 ## usage
