@@ -35,15 +35,15 @@ var Caboche = (function() {
 
   var callbacks = [];
 
-  function create(tag, attributes) {
-
-    var e = document.createElement(tag);
-    for (var k in attributes) { e[k] = attributes[k]; }
-
-    return e;
-  };
+  //function d(txt) {
+  //  var p = document.createElement('p');
+  //  p.appendChild(document.createTextNode(txt));
+  //  document.body.appendChild(p);
+  //}
 
   function executeNext(loaded) {
+
+    //d("loaded: " + loaded);
 
     if (loaded) loadCount = loadCount - 1;
     if (loadCount > 0) return;
@@ -74,18 +74,18 @@ var Caboche = (function() {
 
     loadCount = loadCount + 1;
 
-    var e;
-    if (ie) {
-      e = document.createElement('img');
-      e.src = src;
-    }
-    else {
-      e = document.createElement('object');
-      e.data = src;
-      e.setAttribute('style', 'border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;');
-    }
-    e.addEventListener('load', function() { executeNext(src); });
-    if ( ! ie) document.body.appendChild(e);
+    var tag = 'object';
+    var key = 'data';
+    if (ie) { tag = 'img'; key = 'src' }
+
+    var e = document.createElement(tag);
+    e.onload = e.onerror = function() { executeNext(src); };
+    e[key] = src;
+
+    if (ie) return;
+
+    e.setAttribute('style', 'border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;');
+    document.body.appendChild(e);
   }
 
   // Initiates the preload of the arguments immediately, queues
