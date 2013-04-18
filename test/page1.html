@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>page1.html</title>
-    <script src="js/caboche.js"></script>
+    <script src="../js/caboche.js"></script>
   <head>
   <body>
     <h1>hello</h1>
@@ -13,8 +13,8 @@
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
-      Caboche.require('test/a.js')
-      Caboche.require('test/b.js')
+      Caboche.require('a.js')
+      Caboche.require('b.js')
       Caboche.ready(function() {
         try {
           A

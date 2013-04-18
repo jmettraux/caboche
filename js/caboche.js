@@ -95,7 +95,6 @@ var Caboche = (function() {
 
     for (var i in arguments) {
       var arg = arguments[i];
-      console.log(arg);
       execQueue.push(arg);
       if ((typeof arg) === 'string') load(arg);
     }
