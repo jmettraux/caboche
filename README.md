@@ -7,6 +7,8 @@ Inspired by [head.js](http://headjs.com/) and [lazyload](https://github.com/rgro
 
 Do not want to wait on [this](https://github.com/headjs/headjs/issues/203) or [that](https://github.com/rgrove/lazyload/pull/10).
 
+Caboche will [preload](https://gist.github.com/mathiasbynens/37549) javascript files in parallel, then executes them sequentially (in the order they were required).
+
 
 ## usage
 
@@ -76,6 +78,8 @@ The ready() callbacks get executed once all the sequence have loaded.
 
 * http://www.phpied.com/preload-cssjavascript-without-execution/
 * https://gist.github.com/mathiasbynens/375496
+
+(many thanks)
 
 
 ## license
