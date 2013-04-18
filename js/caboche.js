@@ -24,54 +24,82 @@
 
 var Caboche = (function() {
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.1.0';
 
   //var self = this;
 
+  var ie = /MSIE/.test(navigator.userAgent);
+
+  var execQueue = [];
   var loadCount = 0;
+
   var callbacks = [];
 
-  function loadNext(prev, chain) {
+  function create(tag, attributes) {
 
-    if (prev) loadCount = loadCount - 1;
-    var next = chain.shift();
+    var e = document.createElement(tag);
+    for (var k in attributes) { e[k] = attributes[k]; }
 
-    if ( ! next) { // end of sequence
-      if (loadCount < 1) for (var i in callbacks) { callbacks[i]() }
+    return e;
+  };
+
+  function executeNext(loaded) {
+
+    if (loaded) loadCount = loadCount - 1;
+    if (loadCount > 0) return;
+
+    var item = execQueue.shift();
+
+    if ( ! item) { // global callbacks
+      var cb = callbacks.shift();
+      if ( ! cb) return; // loading and executing over.
+      cb();
+      executeNext(null);
     }
-    else if ((typeof next) === 'string') {
-      var e = document.createElement('script');
-      e.src = next;
-      e.type = 'text/javascript';
-      e.className = 'caboche';
-      e.onload = e.onerror = function() { loadNext(next, chain) };
-      document.getElementsByTagName('head')[0].appendChild(e);
+    else if ((typeof item) === 'string') {
+      var s = document.createElement('script');
+      s.src = item;
+      s.onload = s.onerror = function() { executeNext(null); };
+      document.getElementsByTagName('head')[0].appendChild(s);
     }
-    else { // function (sequence callback)
-      next();
-      loadNext(null, chain);
+    else { // sequential callback
+      item();
+      executeNext(null);
     }
   }
 
-  // Accepts a list of strings (js script URIs) or functions (callbacks).
-  // Loads each script sequentially, fires callback as it encounters them.
-  // May be called multiple times.
+  // Mostly inspired from https://gist.github.com/mathiasbynens/375496
+  //
+  function load(src) {
+
+    loadCount = loadCount + 1;
+
+    var e;
+    if (ie) {
+      e = document.createElement('img');
+      e.src = src;
+    }
+    else {
+      e = document.createElement('object');
+      e.data = src;
+      e.setAttribute('style', 'border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;');
+    }
+    e.addEventListener('load', function() { executeNext(src); });
+    if ( ! ie) document.body.appendChild(e);
+  }
+
+  // Initiates the preload of the arguments immediately, queues
+  // their execution.
   //
   this.require = function() {
 
-    var a = [];
-
     for (var i in arguments) {
       var arg = arguments[i];
-      if ((typeof arg) === 'string') loadCount = loadCount + 1;
-      a.push(arguments[i]);
+      console.log(arg);
+      execQueue.push(arg);
+      if ((typeof arg) === 'string') load(arg);
     }
-
-    loadNext(null, a);
   };
-
-  //
-  // ready
 
   // Registers a callback to run once all the scripts have loaded and
   // executed.

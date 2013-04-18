@@ -72,6 +72,12 @@ Caboche.require(
 The ready() callbacks get executed once all the sequence have loaded.
 
 
+## behind the scenes
+
+* http://www.phpied.com/preload-cssjavascript-without-execution/
+* https://gist.github.com/mathiasbynens/375496
+
+
 ## license
 
 MIT (see LICENSE.txt)

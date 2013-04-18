@@ -90,3 +90,16 @@ desc %q{
 }
 task :p => :package
 
+desc %q{
+  serve the current dir over HTTP for testing
+}
+task :serve do
+
+  sh 'python -m SimpleHTTPServer 1234'
+end
+
+desc %q{
+  alias for 'serve'
+}
+task :s => :serve
+
