@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>play_tcache.html</title>
+    <script src="caboche.js"></script>
+  <head>
+  <body>
+    <h1>hello</h1>
+    <p>playing with object</p>
+    <script>
+      var o;
+      var a = [ 'caboche.js', 'a.js', 'b.js' ];
+      for (var i in a) {
+        o = document.createElement('script');
+        o.type = "text/cache";
+        o.src = a[i];
+        document.body.appendChild(o);
+      }
+      o.onload = function() {
+        console.log("loading...");
+        Caboche.require('a.js');
+        Caboche.require('b.js');
+      };
+    </script>
+  </body>
+</html>
+

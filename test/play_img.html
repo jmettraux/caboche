@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>play_img.html</title>
+    <script src="caboche.js"></script>
+  <head>
+  <body>
+    <h1>hello</h1>
+    <p>playing with img</p>
+    <script>
+      function log(text) {
+        var e = document.createElement('p');
+        e.appendChild(document.createTextNode(text));
+        document.body.appendChild(e);
+      };
+      var o;
+      var a = [ 'caboche.js', 'a.js', 'b.js' ];
+      for (var i in a) {
+        o = document.createElement('img');
+        //o.width = 0;
+        //o.height = 0;
+        //o.setAttribute('onload', 'alert("ok");');
+        o.src = a[i];
+        o.addEventListener('error', function() { log('img loaded'); });
+        document.body.appendChild(o);
+      }
+      Caboche.require('a.js');
+      Caboche.require('b.js');
+      //Caboche.ready(function() {
+      //  try {
+      //    A
+      //    log('A is here')
+      //  } catch(ex) { log('A is not here'); }
+      //  try {
+      //    B
+      //    log('B is here')
+      //  } catch(ex) { log('B is not here'); }
+      //  log('over.')
+      //});
+    </script>
+  </body>
+</html>
+
