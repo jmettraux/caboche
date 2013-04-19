@@ -19,7 +19,8 @@ raise(
 #
 # tasks
 
-CLEAN.include('pkg')
+#CLEAN.include('pkg')
+  # no cleaning for now
 
 task :default => [ :clean ]
 
@@ -27,8 +28,6 @@ desc %q{
   packages/minifies the js files to pkg/
 }
 task :package => :clean do
-
-  FileUtils.rm_rf('pkg')
 
   version = File.read(
     "js/#{LIBRARY}.js"
@@ -38,7 +37,7 @@ task :package => :clean do
 
   sha = `git log -1 --format="%H"`.strip[0, 7]
 
-  sh 'mkdir pkg'
+  sh 'mkdir -p pkg'
 
   js_count = Dir['js/*.js'].length
     # don't create -all- files if there is only 1 js file
