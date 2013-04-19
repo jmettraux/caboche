@@ -6,16 +6,22 @@
   <head>
   <body>
     <h1>hello</h1>
-    <p>loading a and b.js in "parallel"</p>
+    <p>load 6 js files in two phases</p>
     <script>
       function log(text) {
         var e = document.createElement('p');
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
-      Caboche.require('a.js')
-      Caboche.require('b.js')
-      Caboche.ready(function() {
+      Caboche.phase(0, 'a.js');
+      Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?a')
+      Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?b')
+      Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?c')
+      Caboche.phase(1, 'b.js');
+      Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?d')
+      Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?e')
+      Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?f')
+      Caboche.last(function() {
         try {
           A
           log('A is here')

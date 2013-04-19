@@ -24,89 +24,88 @@
 
 var Caboche = (function() {
 
-  var VERSION = '1.1.0';
+  var VERSION = '1.2.0';
 
   //var self = this;
 
-  var ie = /MSIE/.test(navigator.userAgent);
+  var MAXPHASE = 1000;
+  var entries = [];
+  var phase;
+  var phaseCount;
+  //var phaseLog = [];
 
-  var execQueue = [];
-  var loadCount = 0;
+  function loadDone(item) {
 
-  var callbacks = [];
+    if ((typeof item) === 'string') phaseCount = phaseCount - 1;
+    if (phaseCount < 1) nextPhase(phase);
+  }
 
-  //function d(txt) {
-  //  var p = document.createElement('p');
-  //  p.appendChild(document.createTextNode(txt));
-  //  document.body.appendChild(p);
-  //}
+  function load(entry) {
 
-  function executeNext(loaded) {
+    var item = entry.shift();
+    if (item === undefined) return;
 
-    //d("loaded: " + loaded);
+    var t = (typeof item);
 
-    if (loaded) loadCount = loadCount - 1;
-    if (loadCount > 0) return;
-
-    var item = execQueue.shift();
-
-    if ( ! item) { // global callbacks
-      var cb = callbacks.shift();
-      if ( ! cb) return; // loading and executing over.
-      cb();
-      executeNext(null);
-    }
-    else if ((typeof item) === 'string') {
+    if (t === 'string') { // file to load
+      phaseCount = phaseCount + 1;
       var s = document.createElement('script');
       s.src = item;
-      s.onload = s.onerror = function() { executeNext(null); };
+      s.onload = s.onerror = function() { loadDone(item); };
       document.getElementsByTagName('head')[0].appendChild(s);
     }
-    else { // sequential callback
+    else if (t === 'function') { // callback
       item();
-      executeNext(null);
+      loadDone(item);
+    }
+
+    load(entry);
+  }
+
+  function lowestPhase() {
+
+    var min = MAXPHASE;
+
+    for (var i in entries) {
+      var num = entries[i][0]; if (num < min) min = num;
+    }
+    return min;
+  }
+
+  function nextEntryOffset() {
+
+    for (var i in entries) {
+      if (entries[i][0] === phase) return i;
+    }
+    return -1;
+  }
+
+  function nextPhase(prev) {
+
+    if (phase !== prev) return;
+
+    phase = lowestPhase();
+    phaseCount = 0;
+
+    while(true) {
+      var off = nextEntryOffset();
+      if (off < 0) break;
+      var entry = entries.splice(off, 1)[0];
+      load(entry);
     }
   }
 
-  // Mostly inspired from https://gist.github.com/mathiasbynens/375496
-  //
-  function load(src) {
-
-    loadCount = loadCount + 1;
-
-    var tag = 'object';
-    var key = 'data';
-    if (ie) { tag = 'img'; key = 'src' }
-
-    var e = document.createElement(tag);
-    e.onload = e.onerror = function() { executeNext(src); };
-    e[key] = src;
-
-    if (ie) return;
-
-    e.setAttribute('style', 'border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;');
-    document.body.appendChild(e);
-  }
-
-  // Initiates the preload of the arguments immediately, queues
-  // their execution.
-  //
-  this.require = function() {
-
-    for (var i in arguments) {
-      var arg = arguments[i];
-      execQueue.push(arg);
-      if ((typeof arg) === 'string') load(arg);
-    }
+  this.phase = function() {
+    var a = []; for (var i in arguments) { a.push(arguments[i]); }
+    entries.push(a);
+    if ( ! phase) window.setTimeout(nextPhase, 0);
   };
 
-  // Registers a callback to run once all the scripts have loaded and
-  // executed.
-  // May be called multiple times.
-  //
-  this.ready = function(callback) {
-
-    callbacks.push(callback);
+  this.last = function() {
+    // TODO: use apply() (or is it call()?)
+    var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
+    entries.push(a);
+    if ( ! phase) window.setTimeout(nextPhase, 0);
   };
 
   //

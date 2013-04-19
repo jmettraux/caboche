@@ -3,16 +3,10 @@
 
 Almost empty headed.
 
-Inspired by [head.js](http://headjs.com/) and [lazyload](https://github.com/rgrove/lazyload/).
-
-Do not want to wait on [this](https://github.com/headjs/headjs/issues/203) or [that](https://github.com/rgrove/lazyload/pull/10).
-
-Caboche will [preload](https://gist.github.com/mathiasbynens/37549) javascript files in parallel, then executes them sequentially (in the order they were required).
-
 
 ## usage
 
-The main use case: "require a bunch of file, let them load in parallel (hopefully) and run stuff when they are all loaded (and executed)".
+The main use case: "load a first set of js files in parallel, then load a second set (that depends on the first one) in parallel, when all the loading is over run this code..."
 
 ```html
 <html>
@@ -28,12 +22,12 @@ The main use case: "require a bunch of file, let them load in parallel (hopefull
 
     <script>
 
-      Caboche.require('/js/jquery.js')
-      Caboche.require('/js/a.js')
-      Caboche.require('/js/b.js')
+      Caboche.phase(0, '/js/jquery.js')
+      Caboche.phase(1, '/js/a.js')
+      Caboche.phase(1, '/js/b.js')
       //...
 
-      Caboche.ready(function() {
+      Caboche.final(function() {
         // all the scripts are loaded and executed, proceed...
       });
 
@@ -42,44 +36,12 @@ The main use case: "require a bunch of file, let them load in parallel (hopefull
 </html>
 ```
 
-Passing a list of js URIs to require() will load them in sequence:
 
-```js
-Caboche.require('/js/a.js', '/js/b.js');
-  // once a.js is loaded and executed, b.js will start loading
-```
+## history
 
-It's OK to place a callback at the end of a sequence:
-
-```js
-Caboche.require(
-  '/js/a.js',
-  '/js/b.js',
-  function() { document.write("a and b.js got loaded!"); }
-);
-```
-
-In fact, it's OK to place callback anywhere in a sequence:
-
-```js
-Caboche.require(
-  '/js/a.js',
-  '/js/b.js',
-  function() { document.write("a and b.js got loaded,"),
-  '/js/c.js',
-  function() { document.write("a, b and c.js got loaded."); }
-);
-```
-
-The ready() callbacks get executed once all the sequence have loaded.
-
-
-## behind the scenes
-
-* http://www.phpied.com/preload-cssjavascript-without-execution/
-* https://gist.github.com/mathiasbynens/375496
-
-(many thanks)
+* 1.0.0 - everything in parallel, some sequencing
+* 1.1.0 - pre-load everything in parallel, sequence all executions
+* 1.2.0 - phase system
 
 
 ## license

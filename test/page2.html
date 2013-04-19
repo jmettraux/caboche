@@ -12,10 +12,10 @@
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
-      Caboche.require('a.js', 'b.js', function() {
-        log('a then b.js got loaded');
+      Caboche.phase(0, 'a.js', 'b.js', function() {
+        log('a and b.js got loaded');
       });
-      Caboche.ready(function() {
+      Caboche.last(function() {
         try {
           A
           log('A is here')
