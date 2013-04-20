@@ -65,7 +65,7 @@ One has to declare the load order in phases.
 Items in the same phase get loaded in "parallel".
 
 ```js
-  Caboche.phase(0, 'a.js', 'b.js);
+  Caboche.phase(0, 'a.js', 'b.js');
   Caboche.phase(1, 'c.js', 'd.js');
     // load a and b.js, then c and d.js
 ```
@@ -73,7 +73,7 @@ Items in the same phase get loaded in "parallel".
 There is a Caboche.last() method for final callbacks.
 
 ```js
-  Caboche.phase(0, 'a.js', 'b.js);
+  Caboche.phase(0, 'a.js', 'b.js');
   Caboche.phase(1, 'c.js', 'd.js');
   Caboche.last(function() {
     alert("a, b, c and d.js got loaded.");
