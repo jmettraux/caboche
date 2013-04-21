@@ -70,6 +70,16 @@ Items in the same phase get loaded in "parallel".
     // load a and b.js, then c and d.js
 ```
 
+The code above is equivalent to
+
+```js
+  Caboche.phase(0, 'a.js');
+  Caboche.phase(0, 'b.js');
+  Caboche.phase(1, 'c.js');
+  Caboche.phase(1, 'd.js');
+    // load a and b.js, then c and d.js
+```
+
 There is a Caboche.last() method for final callbacks.
 
 ```js
@@ -103,6 +113,8 @@ It's OK to place callbacks (function) anywhere.
   Caboche.phase(3, function() { alert("about to load c.js"); }, 'c.js');
   Caboche.last(function() { alert("everything loaded."); });
 ```
+
+When a "page" is composed of multiple partials, it's OK to scatter phases among the partial, caboche should be able to keep up, it always check back for newest phase entries with lower phase number than the one that just got processed. The loading happens in events, while the "phasing" happens in the main window "thread", that's what makes out of order phasing OK.
 
 
 ## license
