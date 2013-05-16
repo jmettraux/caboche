@@ -30,14 +30,14 @@ var Caboche = (function() {
 
   var MAXPHASE = 1000;
   var entries = [];
-  var phase;
+  var phaseNum;
   var phaseCount;
   //var phaseLog = [];
 
   function loadDone(item) {
 
     if ((typeof item) === 'string') phaseCount = phaseCount - 1;
-    if (phaseCount < 1) nextPhase(phase);
+    if (phaseCount < 1) nextPhase(phaseNum);
   }
 
   function load(entry) {
@@ -75,16 +75,16 @@ var Caboche = (function() {
   function nextEntryOffset() {
 
     for (var i in entries) {
-      if (entries[i][0] === phase) return i;
+      if (entries[i][0] === phaseNum) return i;
     }
     return -1;
   }
 
   function nextPhase(prev) {
 
-    if (phase !== prev) return;
+    if (phaseNum !== prev) return;
 
-    phase = lowestPhase();
+    phaseNum = lowestPhase();
     phaseCount = 0;
 
     while(true) {
@@ -98,14 +98,14 @@ var Caboche = (function() {
   this.phase = function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    if ( ! phase) window.setTimeout(nextPhase, 0);
+    if ( ! phaseNum) window.setTimeout(nextPhase, 0);
   };
 
   this.last = function() {
     // TODO: use apply() (or is it call()?)
     var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    if ( ! phase) window.setTimeout(nextPhase, 0);
+    if ( ! phaseNum) window.setTimeout(nextPhase, 0);
   };
 
   //
