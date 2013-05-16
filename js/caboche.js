@@ -106,10 +106,8 @@ var Caboche = (function() {
   };
 
   this.last = function() {
-    // TODO: use apply() (or is it call()?)
     var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
-    entries.push(a);
-    if ( ! phaseNum) window.setTimeout(nextPhase, 10);
+    Caboche.phase.apply(null, a)
   };
 
   //
