@@ -37,7 +37,11 @@ var Caboche = (function() {
   function loadDone(item) {
 
     if ((typeof item) === 'string') phaseCount = phaseCount - 1;
-    if (phaseCount < 1) nextPhase(phaseNum);
+
+    //if (phaseCount < 1) nextPhase(phaseNum);
+    if (phaseCount < 1) {
+      window.setTimeout(function() { nextPhase(phaseNum); }, 10);
+    }
   }
 
   function load(entry) {
@@ -98,14 +102,14 @@ var Caboche = (function() {
   this.phase = function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    if ( ! phaseNum) window.setTimeout(nextPhase, 0);
+    if ( ! phaseNum) window.setTimeout(nextPhase, 10);
   };
 
   this.last = function() {
     // TODO: use apply() (or is it call()?)
     var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    if ( ! phaseNum) window.setTimeout(nextPhase, 0);
+    if ( ! phaseNum) window.setTimeout(nextPhase, 10);
   };
 
   //
