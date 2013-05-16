@@ -6,17 +6,40 @@
   <head>
   <body>
     <h1>hello</h1>
-    <p>d.js depends on c.js</p>
+    <p>many script blocks</p>
+
     <script>
       function log(text) {
         var e = document.createElement('p');
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
-      Caboche.require('c.js')
-      Caboche.require('d.js')
-      Caboche.ready(function() { log('everything loaded and executed.') });
     </script>
+
+    <p>script 0 done</p>
+
+    <script>
+      //Caboche.phase(0, 'fat.js?_' + Math.random())
+      Caboche.last(function() {
+        try {
+          Fat;
+          log("success!");
+        } catch(ex) {
+          log("fail!")
+        }
+      });
+    </script>
+
+    <p>script 1 done</p>
+
+    <script>
+      Caboche.phase(0, 'fat.js?_' + Math.random())
+      Caboche.phase(1, 'b.js')
+
+      Caboche.last(function() { log('over.') });
+    </script>
+
+    <p>script 2 done</p>
   </body>
 </html>
 

@@ -4,6 +4,8 @@
 
 ## version 1.2.1    not yet released
 
+- 10ms before each nextPhase
+
 
 ## version 1.2.0    released 2013/04/20
 
