@@ -24,85 +24,93 @@
 
 var Caboche = (function() {
 
-  var VERSION = '1.2.1';
+  var VERSION = '1.2.2';
 
   //var self = this;
 
   var MAXPHASE = 1000;
   var entries = [];
-  var phaseNum;
-  var phaseCount;
+  var currentEntry = null;
   //var phaseLog = [];
 
-  function loadDone(item) {
+  function loadDone(phase, item) {
 
-    if ((typeof item) === 'string') phaseCount = phaseCount - 1;
+    if (phase !== currentEntry[0]) {
+      throw(
+        "loadDone(" + phase + ") vs " +
+        "currentEntry [ " + currentEntry[0] + " ]");
+    }
 
-    //if (phaseCount < 1) nextPhase(phaseNum);
-    if (phaseCount < 1) {
-      window.setTimeout(function() { nextPhase(phaseNum); }, 10);
+    var i = currentEntry.indexOf(item);
+
+    if (i < 0) {
+      throw(
+        "couldn't find " + JSON.stringify(item) +
+        " in " + JSON.stringify(currentEntry));
+    }
+
+    currentEntry.splice(i, 1);
+
+    if (currentEntry.length < 2) {
+      currentEntry = null;
+      window.setTimeout(function() { nextPhase(phase); }, 10);
     }
   }
 
-  function load(entry) {
+  function load() {
 
-    var item = entry.shift();
-    if (item === undefined) return;
+    var phase = currentEntry[0];
 
-    var t = (typeof item);
+    for (var i = 0, l = currentEntry.length; i < l; i++) {
 
-    if (t === 'string') { // file to load
-      phaseCount = phaseCount + 1;
-      var s = document.createElement('script');
-      s.src = item;
-      s.onload = s.onerror = function() { loadDone(item); };
-      document.getElementsByTagName('head')[0].appendChild(s);
+      var item = currentEntry[i];
+      var t = (typeof item);
+
+      if (t === 'number') {
+        continue;
+      }
+      if (t === 'function') {
+        item();
+        loadDone(phase, item);
+      }
+      else { // t === 'string'
+        var s = document.createElement('script');
+        s.src = item;
+        s.onload = s.onerror = function() { loadDone(phase, item); };
+        document.getElementsByTagName('head')[0].appendChild(s);
+      }
     }
-    else if (t === 'function') { // callback
-      item();
-      loadDone(item);
-    }
-
-    load(entry);
   }
 
-  function lowestPhase() {
+  function spliceLowestEntry() {
 
-    var min = MAXPHASE;
+    var lowest = [ MAXPHASE + 1, -1 ];
+    var i = -1;
 
-    for (var i in entries) {
-      var num = entries[i][0]; if (num < min) min = num;
+    while(true) {
+      i = i + 1;
+      var entry = entries[i];
+      if ( ! entry) break;
+      if (entry[0] >= lowest[0]) continue;
+      lowest = [ entry[0], i ]
     }
-    return min;
-  }
 
-  function nextEntryOffset() {
-
-    for (var i in entries) {
-      if (entries[i][0] === phaseNum) return i;
-    }
-    return -1;
+    if (lowest[1] < 0) return null;
+    return entries.splice(lowest[1], 1)[0];
   }
 
   function nextPhase(prev) {
 
-    if (phaseNum !== prev) return;
+    if (currentEntry) return;
 
-    phaseNum = lowestPhase();
-    phaseCount = 0;
-
-    while(true) {
-      var off = nextEntryOffset();
-      if (off < 0) break;
-      var entry = entries.splice(off, 1)[0];
-      load(entry);
-    }
+    currentEntry = spliceLowestEntry();
+    if (currentEntry) load();
   }
 
   this.phase = function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    if ( ! phaseNum) window.setTimeout(nextPhase, 10);
+    window.setTimeout(nextPhase, 10);
   };
 
   this.last = function() {
