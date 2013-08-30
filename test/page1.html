@@ -3,6 +3,9 @@
   <head>
     <title>page1.html</title>
     <script src="../js/caboche.js"></script>
+    <!--
+    <script src="../pkg/caboche-1.2.0.js"></script>
+    -->
   </head>
   <body>
     <h1>hello</h1>
@@ -13,14 +16,15 @@
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
       };
+      //Caboche.phase(0, 'http://code.jquery.com/jquery-1.10.2.min.js');
       Caboche.phase(0, 'a.js');
+      Caboche.phase(0, 'c.js');
       Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?a')
       Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?b')
-      Caboche.phase(0, 'http://lambda.io/caboche/jquery.js?c')
+      Caboche.phase(1, 'd.js');
       Caboche.phase(1, 'b.js');
       Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?d')
       Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?e')
-      Caboche.phase(1, 'http://lambda.io/caboche/jquery.js?f')
       Caboche.last(function() {
         try {
           A
