@@ -8,12 +8,8 @@ LIBRARY =
 LICENSE_URI =
   "http://github.com/jmettraux/#{LIBRARY}/LICENSE.txt"
 
-COMPRESSOR =
-  %w[ yui-compressor yuicompressor ].find { |com| `which #{com}`.strip != '' }
-
-raise(
-  "did not find yui-compressor (or yuicompressor) on this system"
-) unless COMPRESSOR
+CLOSURE_COMPILER_OPTIONS =
+  '--warning_level DEFAULT'
 
 
 #
@@ -36,6 +32,7 @@ task :package => :clean do
   )[1]
 
   sha = `git log -1 --format="%H"`.strip[0, 7]
+  now = Time.now.to_s
 
   sh 'mkdir -p pkg'
 
@@ -49,19 +46,21 @@ task :package => :clean do
     FileUtils.cp(path, "pkg/#{fname}-#{version}.js")
 
     sh(
-      COMPRESSOR + ' ' +
-      path + ' ' +
-      "-o pkg/#{fname}-#{version}.min.js")
-
-    File.open("pkg/#{LIBRARY}-all-#{version}.js", 'ab') do |f|
-      f.puts(File.read(path))
-    end if js_count > 1
+      "java -jar tools/google-closure-compiler.jar " +
+      CLOSURE_COMPILER_OPTIONS +
+      " --js #{path}" +
+      " > pkg/#{fname}-#{version}.min.js")
   end
 
   sh(
-    COMPRESSOR + ' ' +
-    "pkg/#{LIBRARY}-all-#{version}.js " +
-    "-o pkg/#{LIBRARY}-all-#{version}.min.js"
+    "cat js/*.js > pkg/#{LIBRARY}-all-#{version}.js"
+  ) if js_count > 1
+
+  sh(
+    "java -jar tools/google-closure-compiler.jar " +
+    CLOSURE_COMPILER_OPTIONS +
+    " --js pkg/#{LIBRARY}-all-#{version}.js" +
+    " > pkg/#{LIBRARY}-all-#{version}.min.js"
   ) if js_count > 1
 
   Dir["pkg/*-#{version}.min.js"].each do |path|
@@ -76,12 +75,12 @@ task :package => :clean do
 
   Dir["pkg/*-#{version}.min.js"].each do |path|
     File.open(path, 'ab') { |f|
-      f.puts("\n/* compressed from commit #{sha} */\n")
+      f.puts("\n/* compressed from commit #{sha} on #{now} */\n")
     }
   end
   Dir["pkg/*-#{version}.js"].each do |path|
     File.open(path, 'ab') { |f|
-      f.puts("\n/* from commit #{sha} */\n")
+      f.puts("\n/* from commit #{sha} on #{now} */\n")
     }
   end
 end
