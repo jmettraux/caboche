@@ -56,7 +56,7 @@ The main use case: "load a first set of js files in parallel, then load a second
 
 One has to declare the load order in phases.
 
-```js
+```javascript
   Caboche.phase(0, 'jquery.js');
   Caboche.phase(1, 'a.js');
     // load jquery.js then a.js
@@ -64,7 +64,7 @@ One has to declare the load order in phases.
 
 Items in the same phase get loaded in "parallel".
 
-```js
+```javascript
   Caboche.phase(0, 'a.js', 'b.js');
   Caboche.phase(1, 'c.js', 'd.js');
     // load a and b.js, then c and d.js
@@ -72,7 +72,7 @@ Items in the same phase get loaded in "parallel".
 
 The code above is equivalent to
 
-```js
+```javascript
   Caboche.phase(0, 'a.js');
   Caboche.phase(0, 'b.js');
   Caboche.phase(1, 'c.js');
@@ -82,7 +82,7 @@ The code above is equivalent to
 
 There is a Caboche.last() method for final callbacks.
 
-```js
+```javascript
   Caboche.phase(0, 'a.js', 'b.js');
   Caboche.phase(1, 'c.js', 'd.js');
   Caboche.last(function() {
@@ -92,7 +92,7 @@ There is a Caboche.last() method for final callbacks.
 
 Actually last(x) is equivalent to phase(1000, x).
 
-```js
+```javascript
   Caboche.last(function() {
     alert("a, b, c and d.js got loaded.");
   });
@@ -106,7 +106,7 @@ Actually last(x) is equivalent to phase(1000, x).
 
 It's OK to place callbacks (function) anywhere.
 
-```js
+```javascript
   Caboche.phase(0, 'a.js');
   Caboche.phase(1, function() { alert("currently in phase 1"); });
   Caboche.phase(2, 'b.js');
@@ -115,6 +115,16 @@ It's OK to place callbacks (function) anywhere.
 ```
 
 When a "page" is composed of multiple partials, it's OK to scatter phases among the partial, caboche should be able to keep up, it always check back for newest phase entries with lower phase number than the one that just got processed. The loading happens in events, while the "phasing" happens in the main window "thread", that's what makes out of order phasing OK.
+
+### simply requiring
+
+Caboche let's you require a piece of javascript and set a callback for when the loading is done (or failed somehow).
+
+```javascript
+  Caboche.require('xyz.js', function() { console.log("done."); });
+```
+
+The callback is optional.
 
 
 ## license

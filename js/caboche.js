@@ -57,6 +57,14 @@ var Caboche = (function() {
     }
   }
 
+  this.require = function(path, onLoad) {
+
+    var s = document.createElement('script');
+    s.src = path;
+    if (onLoad) { s.onload = s.onerror = onLoad; }
+    document.getElementsByTagName('head')[0].appendChild(s);
+  };
+
   function load() {
 
     var phase = currentEntry[0];
@@ -74,10 +82,7 @@ var Caboche = (function() {
         loadDone(phase, item);
       }
       else { // t === 'string'
-        var s = document.createElement('script');
-        s.src = item;
-        s.onload = s.onerror = function() { loadDone(phase, item); };
-        document.getElementsByTagName('head')[0].appendChild(s);
+        Caboche.require(item, function() { loadDone(phase, item); });
       }
     }
   }
