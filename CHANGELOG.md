@@ -2,7 +2,7 @@
 # caboche changelog
 
 
-## version 1.2.4    not yet released
+## version 1.2.4    released 2014/03/10
 
 - Caboche.state() --> 'loading' or 'loaded'
 
