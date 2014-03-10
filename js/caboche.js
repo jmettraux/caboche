@@ -24,14 +24,18 @@
 
 var Caboche = (function() {
 
+  //
+  // protected
+
   var VERSION = '1.2.3';
 
   //var self = this;
 
-  var MAXPHASE = 1000;
+  var MAXPHASE = 1414;
   var entries = [];
   var currentEntry = null;
   //var phaseLog = [];
+  var cabocheState = 'loading';
 
   function loadDone(phase, item) {
 
@@ -89,7 +93,7 @@ var Caboche = (function() {
 
   function spliceLowestEntry() {
 
-    var lowest = [ MAXPHASE + 1, -1 ];
+    var lowest = [ MAXPHASE + 2, -1 ];
     var i = -1;
 
     while(true) {
@@ -112,6 +116,11 @@ var Caboche = (function() {
     if (currentEntry) load();
   }
 
+  entries.push([ MAXPHASE + 1, function() { cabocheState = 'loaded'; } ]);
+
+  //
+  // public
+
   this.phase = function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
@@ -122,6 +131,10 @@ var Caboche = (function() {
     var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
     Caboche.phase.apply(null, a)
   };
+
+  this.state = function() {
+    return cabocheState;
+  }
 
   //
   // over.
