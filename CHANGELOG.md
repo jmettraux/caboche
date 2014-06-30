@@ -2,6 +2,11 @@
 # caboche changelog
 
 
+## version 1.2.5    not yet released
+
+- functions that return false end their phases (conditional load)
+
+
 ## version 1.2.4    released 2014/03/10
 
 - Caboche.state() --> 'loading' or 'loaded'

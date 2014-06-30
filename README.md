@@ -57,71 +57,90 @@ The main use case: "load a first set of js files in parallel, then load a second
 One has to declare the load order in phases.
 
 ```javascript
-  Caboche.phase(0, 'jquery.js');
-  Caboche.phase(1, 'a.js');
-    // load jquery.js then a.js
+Caboche.phase(0, 'jquery.js');
+Caboche.phase(1, 'a.js');
+  // load jquery.js then a.js
 ```
 
 Items in the same phase get loaded in "parallel".
 
 ```javascript
-  Caboche.phase(0, 'a.js', 'b.js');
-  Caboche.phase(1, 'c.js', 'd.js');
-    // load a and b.js, then c and d.js
+Caboche.phase(0, 'a.js', 'b.js');
+Caboche.phase(1, 'c.js', 'd.js');
+  // load a and b.js, then c and d.js
 ```
 
 The code above is equivalent to
 
 ```javascript
-  Caboche.phase(0, 'a.js');
-  Caboche.phase(0, 'b.js');
-  Caboche.phase(1, 'c.js');
-  Caboche.phase(1, 'd.js');
-    // load a and b.js, then c and d.js
+Caboche.phase(0, 'a.js');
+Caboche.phase(0, 'b.js');
+Caboche.phase(1, 'c.js');
+Caboche.phase(1, 'd.js');
+  // load a and b.js, then c and d.js
 ```
 
 There is a Caboche.last() method for final callbacks.
 
 ```javascript
-  Caboche.phase(0, 'a.js', 'b.js');
-  Caboche.phase(1, 'c.js', 'd.js');
-  Caboche.last(function() {
-    alert("a, b, c and d.js got loaded.");
-  });
+Caboche.phase(0, 'a.js', 'b.js');
+Caboche.phase(1, 'c.js', 'd.js');
+Caboche.last(function() {
+  alert("a, b, c and d.js got loaded.");
+});
 ```
 
 Actually last(x) is equivalent to phase(1000, x).
 
 ```javascript
-  Caboche.last(function() {
-    alert("a, b, c and d.js got loaded.");
-  });
-    //
-    // is equivalent to
-    //
-  Caboche.phase(1000, function() {
-    alert("a, b, c and d.js got loaded.");
-  });
+Caboche.last(function() {
+  alert("a, b, c and d.js got loaded.");
+});
+  //
+  // is equivalent to
+  //
+Caboche.phase(1000, function() {
+  alert("a, b, c and d.js got loaded.");
+});
 ```
 
 It's OK to place callbacks (function) anywhere.
 
 ```javascript
-  Caboche.phase(0, 'a.js');
-  Caboche.phase(1, function() { alert("currently in phase 1"); });
-  Caboche.phase(2, 'b.js');
-  Caboche.phase(3, function() { alert("about to load c.js"); }, 'c.js');
-  Caboche.last(function() { alert("everything loaded."); });
+Caboche.phase(0, 'a.js');
+Caboche.phase(1, function() { alert("currently in phase 1"); });
+Caboche.phase(2, 'b.js');
+Caboche.phase(3, function() { alert("about to load c.js"); }, 'c.js');
+Caboche.last(function() { alert("everything loaded."); });
 ```
 
 When a "page" is composed of multiple partials, it's OK to scatter phases among the partial, caboche should be able to keep up, it always check back for newest phase entries with lower phase number than the one that just got processed. The loading happens in events, while the "phasing" happens in the main window "thread", that's what makes out of order phasing OK.
+
+### conditional phases
+
+If a listed element is a function and returns false, the elements that follow in the phase are not loaded (not executed if they are functions).
+
+In the example below, the "local" jQuery is only loaded if the CDN jQuery load seems to have failed (`typeof jQuery === 'undefined'`).
+
+```javascript
+Caboche.phase(
+  0,
+  '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');
+Caboche.phase(
+  1,
+  function() { if ((typeof jQuery) === 'undefined') return false; return true; },
+  '/js/jquery-1.11.0.js');
+Caboche.phase(
+  2,
+  '/js/ourlibs.js');
+```
 
 ### simply requiring
 
 Caboche let's you require a piece of javascript and set a callback for when the loading is done (or failed somehow).
 
 ```javascript
-  Caboche.require('xyz.js', function() { console.log("done."); });
+Caboche.require('xyz.js', function() { console.log("done."); });
 ```
 
 The callback is optional.

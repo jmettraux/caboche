@@ -27,7 +27,7 @@ var Caboche = (function() {
   //
   // protected
 
-  var VERSION = '1.2.4';
+  var VERSION = '1.2.5';
 
   //var self = this;
 
@@ -37,7 +37,7 @@ var Caboche = (function() {
   //var phaseLog = [];
   var cabocheState = 'loading';
 
-  function loadDone(phase, item) {
+  function loadDone(phase, index) {
 
     if (phase !== currentEntry[0]) {
       throw(
@@ -45,18 +45,21 @@ var Caboche = (function() {
         "currentEntry [ " + currentEntry[0] + " ]");
     }
 
-    var i = currentEntry.indexOf(item);
+    var over = true;
 
-    if (i < 0) {
-      throw(
-        "couldn't find " + JSON.stringify(item) +
-        " in " + JSON.stringify(currentEntry));
+    if (index !== true) {
+
+      currentEntry[index] = null;
+
+      for (var i = 1, l = currentEntry.length; i < l; i++) {
+        if (currentEntry[i] != null) { over = false; break; }
+      }
     }
 
-    currentEntry.splice(i, 1);
+    if (over) {
 
-    if (currentEntry.length < 2) {
       currentEntry = null;
+
       window.setTimeout(function() { nextPhase(phase); }, 10);
     }
   }
@@ -69,25 +72,37 @@ var Caboche = (function() {
     document.getElementsByTagName('head')[0].appendChild(s);
   };
 
+  function doLoad(phase, index) {
+
+    var item = currentEntry[index];
+    var t = (typeof item);
+
+    if (t === 'function') {
+
+      var shouldContinue = item();
+      if (shouldContinue === false) return false;
+
+      loadDone(phase, index);
+    }
+    else { // t === 'string'
+
+      Caboche.require(item, function() { loadDone(phase, index); });
+    }
+
+    return true;
+  }
+
   function load() {
 
     var phase = currentEntry[0];
 
-    for (var i = 0, l = currentEntry.length; i < l; i++) {
+    for (var i = 1, l = currentEntry.length; i < l; i++) {
 
-      var item = currentEntry[i];
-      var t = (typeof item);
+      var shouldContinue = doLoad(phase, i);
+      if (shouldContinue !== false) continue;
 
-      if (t === 'number') {
-        continue;
-      }
-      if (t === 'function') {
-        item();
-        loadDone(phase, item);
-      }
-      else { // t === 'string'
-        Caboche.require(item, function() { loadDone(phase, item); });
-      }
+      loadDone(phase, true); // flags everything as done
+      break;
     }
   }
 
@@ -96,7 +111,7 @@ var Caboche = (function() {
     var lowest = [ MAXPHASE + 2, -1 ];
     var i = -1;
 
-    while(true) {
+    while (true) {
       i = i + 1;
       var entry = entries[i];
       if ( ! entry) break;
