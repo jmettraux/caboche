@@ -2,7 +2,7 @@
 # caboche changelog
 
 
-## version 1.2.5    not yet released
+## version 1.2.5    released 2014/06/30
 
 - functions that return false end their phases (conditional load)
 
