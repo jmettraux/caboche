@@ -36,7 +36,7 @@ The main use case: "load a first set of js files in parallel, then load a second
 
   <body>
 
-    <!-- ... --->
+    <!-- ... -->
 
     <script>
 
