@@ -142,23 +142,32 @@ var Caboche = (function() {
   // public
 
   this.phase = function() {
+
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
+
     var t = (a[0] + 1) * 10; if (t > 56) t = 56;
     window.setTimeout(nextPhase, t);
   };
 
   this.last = function() {
-    var a = [ READYPHASE - 1 ]; for (var i in arguments) { a.push(arguments[i]); }
+
+    var a = [ READYPHASE - 1 ];
+    for (var i in arguments) { a.push(arguments[i]); }
+
     Caboche.phase.apply(null, a);
   };
 
   this.ready = function() {
-    var a = [ READYPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
+
+    var a = [ READYPHASE ];
+    for (var i in arguments) { a.push(arguments[i]); }
+
     Caboche.phase.apply(null, a);
   };
 
   this.state = function() {
+
     return cabocheState;
   }
 
