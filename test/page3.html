@@ -19,6 +19,10 @@
     <p>script 0 done</p>
 
     <script>
+
+      Caboche.last(function() { log('last 0') });
+      Caboche.ready(function() { log('ready 0') });
+
       //Caboche.phase(0, 'fat.js?_' + Math.random())
       Caboche.last(function() {
         try {
@@ -33,10 +37,12 @@
     <p>script 1 done</p>
 
     <script>
+
       Caboche.phase(0, 'fat.js?_' + Math.random())
       Caboche.phase(1, 'b.js')
 
-      Caboche.last(function() { log('over.') });
+      Caboche.last(function() { log('last 1') });
+      Caboche.ready(function() { log('ready 1') });
     </script>
 
     <p>script 2 done</p>

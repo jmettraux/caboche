@@ -27,14 +27,13 @@ var Caboche = (function() {
   //
   // protected
 
-  var VERSION = '1.2.5';
+  var VERSION = '1.2.6';
 
   //var self = this;
 
-  var MAXPHASE = 1414;
+  var READYPHASE = 999;
   var entries = [];
   var currentEntry = null;
-  //var phaseLog = [];
   var cabocheState = 'loading';
 
   function loadDone(phase, index) {
@@ -96,6 +95,12 @@ var Caboche = (function() {
 
     var phase = currentEntry[0];
 
+    if (phase === READYPHASE && document.readyState === 'loading')
+    {
+      window.setTimeout(load, 10);
+      return;
+    }
+
     for (var i = 1, l = currentEntry.length; i < l; i++) {
 
       var shouldContinue = doLoad(phase, i);
@@ -108,7 +113,7 @@ var Caboche = (function() {
 
   function spliceLowestEntry() {
 
-    var lowest = [ MAXPHASE + 2, -1 ];
+    var lowest = [ READYPHASE + 2, -1 ];
     var i = -1;
 
     while (true) {
@@ -131,7 +136,7 @@ var Caboche = (function() {
     if (currentEntry) load();
   }
 
-  entries.push([ MAXPHASE + 1, function() { cabocheState = 'loaded'; } ]);
+  entries.push([ READYPHASE + 1, function() { cabocheState = 'loaded'; } ]);
 
   //
   // public
@@ -139,12 +144,18 @@ var Caboche = (function() {
   this.phase = function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
-    window.setTimeout(nextPhase, 10);
+    var t = (a[0] + 1) * 10; if (t > 56) t = 56;
+    window.setTimeout(nextPhase, t);
   };
 
   this.last = function() {
-    var a = [ MAXPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
-    Caboche.phase.apply(null, a)
+    var a = [ READYPHASE - 1 ]; for (var i in arguments) { a.push(arguments[i]); }
+    Caboche.phase.apply(null, a);
+  };
+
+  this.ready = function() {
+    var a = [ READYPHASE ]; for (var i in arguments) { a.push(arguments[i]); }
+    Caboche.phase.apply(null, a);
   };
 
   this.state = function() {
