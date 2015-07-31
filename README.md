@@ -19,7 +19,9 @@ The [first version](https://github.com/jmettraux/caboche/blob/5bf9b09f0fc5967483
 
 The [second version](https://github.com/jmettraux/caboche/blob/4cedf84bb41028a8015a6fa20c4709e848f0aa50/js/caboche.js) was pre-loading all the js files in parallel and then "requiring" them in sequence. That worked ok, but was a bit overkill when the files are already well cached. And requiring from here and then from there opened the possibility for loading libs before their dependencies (like in the first version).
 
-This [1.2.0 version](js/caboche.js) is much more simple, phases have to be declared, grouping the loading of files.
+The 1.2.0 version is much more simple, phases have to be declared, grouping the loading of files.
+
+The [1.2.6 version](js/caboche.js) introduces `Caboche.ready()` for pieces of code to run when the DOM loading and preparation are complete.
 
 
 ## usage
