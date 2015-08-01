@@ -9,11 +9,14 @@
     <p>many script blocks</p>
 
     <script>
+      window.t0 = (new Date()).getTime();
       function log(text) {
         var e = document.createElement('p');
         e.appendChild(document.createTextNode(text));
         document.body.appendChild(e);
+        console.log([ (new Date()).getTime() - t0, "log: " + text ]);
       };
+      log('start');
     </script>
 
     <p>script 0 done</p>
@@ -38,8 +41,11 @@
 
     <script>
 
-      Caboche.phase(0, 'fat.js?_' + Math.random())
-      Caboche.phase(1, 'b.js')
+      Caboche.phase(0, function() { log('pre-fat'); });
+      Caboche.phase(0, 'fat.js?_' + Math.random());
+      Caboche.phase(1, function() { log('pre-b'); });
+      Caboche.phase(1, 'b.js');
+      Caboche.phase(1, function() { log('post-b'); });
 
       Caboche.last(function() { log('last 1') });
       Caboche.ready(function() { log('ready 1') });
