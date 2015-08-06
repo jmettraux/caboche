@@ -27,7 +27,7 @@ var Caboche = (function() {
   //
   // protected
 
-  var VERSION = '1.2.6';
+  var VERSION = '1.2.7';
 
   //var self = this;
 
