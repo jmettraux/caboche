@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title>page3.html</title>
     <script src="../js/caboche.js"></script>
   </head>
+
   <body>
+    <script>
+
+      Caboche.last(function() { console.log('last -1'); });
+    </script>
+
     <h1>hello</h1>
     <p>many script blocks</p>
 
     <script>
+
       window.t0 = (new Date()).getTime();
       function log(text) {
         var e = document.createElement('p');

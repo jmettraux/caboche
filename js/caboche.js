@@ -39,6 +39,7 @@ var Caboche = (function() {
   function loadDone(phase, index) {
 
     if (phase !== currentEntry[0]) {
+
       throw(
         "loadDone(" + phase + ") vs " +
         "currentEntry [ " + currentEntry[0] + " ]");
@@ -95,8 +96,8 @@ var Caboche = (function() {
 
     var phase = currentEntry[0];
 
-    if (phase === READYPHASE && document.readyState === 'loading')
-    {
+    if (phase === READYPHASE && document.readyState === 'loading') {
+
       window.setTimeout(load, 10);
       return;
     }
@@ -114,10 +115,9 @@ var Caboche = (function() {
   function spliceLowestEntry() {
 
     var lowest = [ READYPHASE + 2, -1 ];
-    var i = -1;
 
-    while (true) {
-      i = i + 1;
+    for (var i = 0; ; i++) {
+
       var entry = entries[i];
       if ( ! entry) break;
       if (entry[0] >= lowest[0]) continue;
