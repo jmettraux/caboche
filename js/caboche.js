@@ -146,7 +146,7 @@ var Caboche = (function() {
     var a = []; for (var i in arguments) { a.push(arguments[i]); }
     entries.push(a);
 
-    var t = (a[0] + 1) * 10; if (t > 56) t = 56;
+    var t = (a[0] + 1) * 10; if (t > 98) t = 98;
     window.setTimeout(nextPhase, t);
   };
 
