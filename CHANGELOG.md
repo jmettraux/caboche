@@ -2,6 +2,16 @@
 # caboche changelog
 
 
+## version 1.2.7    released 2015/08/07
+
+- wait longer before triggering last() or ready() phases
+
+
+## version 1.2.6    released 2015/08/01
+
+- introduce ready()
+
+
 ## version 1.2.5    released 2014/06/30
 
 - functions that return false end their phases (conditional load)
