@@ -96,6 +96,12 @@ var Caboche = (function() {
 
     var phase = currentEntry[0];
 
+    // document.readyState =>
+    //
+    // 'loading'
+    // 'interactive' (loading remaining images, css and frames...)
+    // 'complete'
+
     if (phase === READYPHASE && document.readyState === 'loading') {
 
       window.setTimeout(load, 10);
