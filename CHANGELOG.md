@@ -2,7 +2,7 @@
 # caboche changelog
 
 
-## version 1.2.8    not yet released
+## version 1.2.8    released 2016/06/23
 
 - Caboche.ready(1, function() {}) to order "ready" callbacks
 
