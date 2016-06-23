@@ -2,6 +2,9 @@
 # caboche changelog
 
 
+## version 1.2.8    not yet released
+
+
 ## version 1.2.7    released 2015/08/07
 
 - wait longer before triggering last() or ready() phases
