@@ -137,6 +137,22 @@ Caboche.phase(
   '/js/ourlibs.js');
 ```
 
+### Caboche.ready()
+
+```javascript
+Caboche.ready(function() { console.log('executes when document ready'); });
+```
+
+`ready` accepts a number, an offset, as first argument.
+
+```javascript
+// a:
+Caboche.ready(1, function() { console.log('executes after b:'); });
+// b:
+Caboche.ready(0, function() { console.log('executes before a:'); });
+```
+
+
 ### simply requiring
 
 Caboche let's you require a piece of javascript and set a callback for when the loading is done (or failed somehow).
