@@ -166,8 +166,12 @@ var Caboche = (function() {
 
   this.ready = function() {
 
-    var a = [ READYPHASE ];
-    for (var i in arguments) { a.push(arguments[i]); }
+    var off = (typeof arguments[0]) === 'number' ? arguments[0] : 0;
+    var a = [ READYPHASE + off ];
+
+    for (var i in arguments) {
+      if ((typeof arguments[i]) !== 'number') a.push(arguments[i]);
+    }
 
     Caboche.phase.apply(null, a);
   };

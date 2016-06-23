@@ -47,7 +47,7 @@ The main use case: "load a first set of js files in parallel, then load a second
       Caboche.phase(1, '/js/b.js');
       //...
 
-      Caboche.final(function() {
+      Caboche.last(function() {
         // all the scripts are loaded and executed, proceed...
       });
 
@@ -92,7 +92,7 @@ Caboche.last(function() {
 });
 ```
 
-Actually last(x) is equivalent to phase(1000, x).
+Actually last(x) is equivalent to phase(998, x).
 
 ```javascript
 Caboche.last(function() {
@@ -101,7 +101,7 @@ Caboche.last(function() {
   //
   // is equivalent to
   //
-Caboche.phase(1000, function() {
+Caboche.phase(998, function() {
   alert("a, b, c and d.js got loaded.");
 });
 ```

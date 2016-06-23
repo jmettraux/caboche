@@ -4,6 +4,8 @@
 
 ## version 1.2.8    not yet released
 
+- Caboche.ready(1, function() {}) to order "ready" callbacks
+
 
 ## version 1.2.7    released 2015/08/07
 
